@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🎂 Happy Birthday!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="blob blob4"></div>
+  </div>
+
+  <div class="floaters" id="floaters"></div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <button class="icon-btn" id="musicBtn" title="Toggle Music">🔇</button>
+    <button class="icon-btn" id="darkBtn"  title="Toggle Dark Mode">🌙</button>
+  </div>
+
+  <button class="back-btn" id="backBtn">← Back</button>
+
+  <!-- ═══════════════════════════
+       LANDING PAGE
+  ═══════════════════════════ -->
+  <div class="page" id="landingPage">
+
+    <div class="cake-wrap">
+      <span class="cake">🎂</span>
+      <span class="sparkle" style="top:-12px;left:8px;animation-delay:0s">✨</span>
+      <span class="sparkle" style="top:-20px;right:4px;animation-delay:.7s">⭐</span>
+      <span class="sparkle" style="bottom:8px;left:-16px;animation-delay:1.2s">✨</span>
+      <span class="sparkle" style="top:28%;right:-18px;animation-delay:.4s">🌟</span>
+    </div>
+
+    <!-- Title: plain color on h1, gradient only on inner span with generous padding -->
+    <h1 class="title">
+      <span class="title-inner">Happy Birthday!</span>
+    </h1>
+
+    <p class="subtitle">
+      Wishing you a day full of joy, laughter, and all the sweetest things life has to offer! 🎉
+    </p>
+
+    <div class="msg-card">
+      <p class="msg-title-text">A Little Message 💌</p>
+      <p class="msg-text">
+        Today is YOUR day — a day to celebrate how wonderful you truly are.
+        May every moment sparkle, every wish come true, and every smile last forever.
+        We have a little surprise waiting for you… 🎁
+      </p>
+    </div>
+
+    <button class="gift-btn" id="giftBtn">🎁 Click this for the Gifts!</button>
+
+  </div>
+
+  <!-- ═══════════════════════════
+       GAME PAGE
+  ═══════════════════════════ -->
+  <div class="page hidden" id="gamePage">
+
+    <p class="game-title">🎀 Birthday Claw Machine 🎀</p>
+    <div class="score-badge" id="scoreBadge">Gifts caught: 0 / 5 🎁</div>
+
+    <p class="controls-hint">
+      <kbd>A</kbd> / <kbd>◀</kbd> Left &nbsp;·&nbsp;
+      <kbd>D</kbd> / <kbd>▶</kbd> Right &nbsp;·&nbsp;
+      <kbd>Space</kbd> / <kbd>Enter</kbd> Drop
+    </p>
+
+    <div class="machine">
+      <div class="top-frame"><span>🌸 BIRTHDAY PRIZE ZONE 🌸</span></div>
+      <div class="glass-box" id="glassBox">
+        <div class="rail"></div>
+        <div class="claw-assembly" id="clawAssembly" style="left:50%">
+          <div class="claw-head"></div>
+          <div class="claw-wire" id="clawWire" style="height:40px"></div>
+          <div class="claw-grip">
+            <div class="claw-arm left"  id="armLeft"></div>
+            <div class="claw-arm right" id="armRight"></div>
+          </div>
+        </div>
+        <div class="toy" id="toy0" data-pos="12">🐻</div>
+        <div class="toy" id="toy1" data-pos="29">🐰</div>
+        <div class="toy" id="toy2" data-pos="46">🦊</div>
+        <div class="toy" id="toy3" data-pos="63">🐧</div>
+        <div class="toy" id="toy4" data-pos="80">🐱</div>
+        <div class="chute"></div>
+        <div class="floor"></div>
+      </div>
+      <div class="bottom-frame">
+        <button class="btn btn-dir" id="btnLeft">◀</button>
+        <button class="btn btn-drop" id="btnDrop">DROP! 🎀</button>
+        <button class="btn btn-dir" id="btnRight">▶</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════
+       PRIZE POPUP
+  ═══════════════════════════ -->
+  <div class="msg-overlay" id="msgOverlay">
+    <div class="msg-popup">
+      <span class="pop-emoji" id="popEmoji">🐻</span>
+      <p class="pop-name"  id="popName">Teddy Bear</p>
+      <p class="pop-text"  id="popText">You caught me!</p>
+      <button class="btn-close-pop" id="btnClosePop">Keep Playing! 🎮</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════
+       SLIDESHOW FINAL SCREEN
+  ═══════════════════════════ -->
+  <div class="slideshow-overlay" id="slideshowOverlay">
+
+    <p class="ss-title">🎊 All Gifts Collected! 🎊</p>
+    <p class="ss-subtitle">
+      You collected every single gift — just like you've collected so many beautiful moments!
+      Here's a little slideshow, just for you 💖
+    </p>
+
+    <div class="ss-frame" id="ssFrame"></div>
+
+    <div class="ss-dots" id="ssDots"></div>
+
+    <div class="ss-nav">
+      <button class="ss-arrow" id="ssPrev">‹</button>
+      <span class="ss-counter" id="ssCounter">1 / 6</span>
+      <button class="ss-arrow" id="ssNext">›</button>
+    </div>
+
+    <button class="btn-replay" id="btnReplay">🎁 Play Again!</button>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
