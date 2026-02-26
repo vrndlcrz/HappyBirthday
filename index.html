@@ -53,13 +53,11 @@
     <div class="msg-card">
       <p class="msg-title-text">A Little Message 💌</p>
       <p class="msg-text">
-        Today is YOUR day — a day to celebrate how wonderful you truly are.
-        May every moment sparkle, every wish come true, and every smile last forever.
-        We have a little surprise waiting for you… 🎁
+        Happy Birthday Samsam! Hope your day is as wonderful and special as you are. 'Di mo man me kasama today, I hope this little effort will be appreciated. I love you!💓
       </p>
     </div>
 
-    <button class="gift-btn" id="giftBtn">🎁 Click this for the Gifts!</button>
+    <button class="gift-btn" id="giftBtn">PLAY KA MUNA!</button>
 
   </div>
 
@@ -89,11 +87,27 @@
             <div class="claw-arm right" id="armRight"></div>
           </div>
         </div>
-        <div class="toy" id="toy0" data-pos="12">🐻</div>
-        <div class="toy" id="toy1" data-pos="29">🐰</div>
-        <div class="toy" id="toy2" data-pos="46">🦊</div>
-        <div class="toy" id="toy3" data-pos="63">🐧</div>
-        <div class="toy" id="toy4" data-pos="80">🐱</div>
+        <div class="toy" id="toy0" data-pos="8"  data-bottom="6">
+          <img src="pattybara.png" class="toy-img" alt="PattyBara" />
+        </div>
+        <div class="toy" id="toy1" data-pos="24" data-bottom="6">
+          <img src="side.png" class="toy-img" alt="Side" />
+        </div>
+        <div class="toy" id="toy2" data-pos="42" data-bottom="6">
+          <img src="astro.png" class="toy-img" alt="Astro">
+        </div>
+        <div class="toy" id="toy3" data-pos="60" data-bottom="6">
+          <img src="capy.png" class="toy-img" alt="Capy">
+        </div>
+        <div class="toy" id="toy4" data-pos="76" data-bottom="6">
+          <img src="ichi.png" class="toy-img" alt="Ichi">
+        </div>
+        <div class="toy" id="toy5" data-pos="16" data-bottom="30">
+          <img src="slowy.png" class="toy-img" alt="Slowy">
+        </div>
+        <div class="toy" id="toy6" data-pos="54" data-bottom="30">
+          <img src="cali.png" class="toy-img" alt="Cali">
+        </div>
         <div class="chute"></div>
         <div class="floor"></div>
       </div>
@@ -118,7 +132,24 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════
+  <!-- SAMVERN HIDDEN MESSAGE (invisible until .show added by JS) -->
+  <div class="samvern-overlay" id="samvernOverlay">
+    <div class="samvern-popup">
+      <div class="samvern-doves">
+        <span class="sv-dove sv-dove1">🕊️</span>
+        <span class="sv-dove sv-dove2">🕊️</span>
+        <span class="sv-dove sv-dove3">🕊️</span>
+      </div>
+      <p class="sv-from">a hidden gift from...</p>
+      <h2 class="sv-name">Samvern 🤍</h2>
+      <div class="sv-divider"></div>
+      <img src="samvern.png" class="sv-toy-img" alt="Samvern" />
+      <p class="sv-message" id="svMessage"></p>
+      <button class="sv-btn" id="svBtn">With love, always 🤍</button>
+    </div>
+  </div>
+
+    <!-- ═══════════════════════════
        SLIDESHOW FINAL SCREEN
   ═══════════════════════════ -->
   <div class="slideshow-overlay" id="slideshowOverlay">

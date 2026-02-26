@@ -249,24 +249,29 @@ let ssAuto = null;
 function startAuto() { ssAuto = setInterval(() => goToSlide(ssIdx + 1), 4000); }
 function stopAuto()  { clearInterval(ssAuto); }
 
-document.getElementById('ssNext').addEventListener('click', () => { goToSlide(ssIdx + 1); stopAuto(); startAuto(); });
-document.getElementById('ssPrev').addEventListener('click', () => { goToSlide(ssIdx - 1); stopAuto(); startAuto(); });
+document.getElementById('ssNext').addEventListener('click', () => { stopAuto(); goToSlide(ssIdx + 1); startAuto(); });
+document.getElementById('ssPrev').addEventListener('click', () => { stopAuto(); goToSlide(ssIdx - 1); startAuto(); });
+ssFrame.addEventListener('mouseenter', () => stopAuto());
+ssFrame.addEventListener('mouseleave', () => { if (slideshowOverlay.classList.contains('show')) startAuto(); });
 
 /* ═══════════════════════════════════════
    CLAW GAME
 ═══════════════════════════════════════ */
 const TOYS = [
-  { id:'toy0', emoji:'🐻', name:'Teddy Bear', message:"You caught me! 🐻 Every time you hold me close, remember — you are loved beyond measure. Stay cozy and keep dreaming big!" },
-  { id:'toy1', emoji:'🐰', name:'Bunny',      message:"Hop hop! You found me! 🐰 Life is full of wonderful surprises. Keep bouncing forward with joy!" },
-  { id:'toy2', emoji:'🦊', name:'Foxy',       message:"Clever one, aren't you? 🦊 You had the courage to try, and it paid off! Never stop chasing what you want!" },
-  { id:'toy3', emoji:'🐧', name:'Penguin',    message:"Waddle waddle! You got me! 🐧 Even on cold days, there's warmth in small victories. You're doing amazing!" },
-  { id:'toy4', emoji:'🐱', name:'Kitty Cat',  message:"Purrfect catch! 🐱 You've got the heart of a champion. Curiosity and persistence always win — just like you!" },
+  { id:'toy0', img:'pattybara.png',      name:'PattyBara',      message:"Gotcha back, Mom! 🌸 Even on my sniffly, sleepy days, your hugs are the best victory. You’re doing amazing as a mama. Happy Birthday!" },
+  { id:'toy1', img:'side.png',       name:'Side',       message:"Yay, Mom found me! 🌟 You always know exactly where I am. Life is a wonderful surprise because of you. Keep bouncing forward with joy today! Happy Birthday!" },
+  { id:'toy2', img:'astro.png',      name:'Astro',     message:"You’re too clever for me, Mom! ✨ You always taught me to have courage, and look—it paid off! Thank you for helping me chase the stars. Happy Birthday!" },
+  { id:'toy3', img:'capy.png', name:'Capy', message:"Mom, you caught me! 🐾 Every time you hold me close, I feel so safe and loved. You’re the best mama ever—stay cozy and keep dreaming big. Happy Birthday!" },
+  { id:'toy4', img:'ichi.png',           name:'Ichi',           message:"The purrfect catch by the purrfect Mom! 🎀 I get my persistence and heart from you. You’re my champion every single day. Happy Birthday!" },
+  { id:'toy5', img:'slowy.png',          name:'Slowy',          message:"Slow and steady... right into Mom's arms! 🐢 Thank you for being so patient and wonderful with me. I love you more than words can say. Happy Birthday!" },
+  { id:'toy6', img:'cali.png',           name:'Cali',           message:"You caught me, you superstar Mama! 💖 You deserve all the happiness in the world today for everything you do for us. Happy Birthday!" }
 ];
 
 let clawX      = 50;
 let dropping   = false;
 let caughtCount = 0;
 let remaining  = [...TOYS];
+let pendingHit  = null;
 
 const glassBox     = document.getElementById('glassBox');
 const clawAssembly = document.getElementById('clawAssembly');
@@ -284,7 +289,7 @@ function setToyPositions() {
     const el = document.getElementById(toy.id);
     if (el && !el.classList.contains('grabbed')) {
       el.style.left   = el.dataset.pos + '%';
-      el.style.bottom = '8%';
+      el.style.bottom = (el.dataset.bottom || '6') + '%';
     }
   });
 }
@@ -296,13 +301,14 @@ function resetGame() {
   dropping    = false;
   caughtCount = 0;
   remaining   = [...TOYS];
+  pendingHit  = null;
 
   clawAssembly.style.left   = '50%';
   clawWire.style.height     = '40px';
   armLeft.className         = 'claw-arm left';
   armRight.className        = 'claw-arm right';
   btnDrop.textContent       = 'DROP! 🎀';
-  scoreBadge.textContent    = 'Gifts caught: 0 / 5 🎁';
+  scoreBadge.textContent    = 'Gifts caught: 0 / 7 🎁';
 
   setButtons(false);
 
@@ -313,18 +319,22 @@ function resetGame() {
       el = document.createElement('div');
       el.className    = 'toy';
       el.id           = toy.id;
-      el.dataset.pos  = ({ toy0:'12', toy1:'29', toy2:'46', toy3:'63', toy4:'80' })[toy.id];
-      el.textContent  = toy.emoji;
+      const posMap    = { toy0:'8',  toy1:'24', toy2:'42', toy3:'60', toy4:'76', toy5:'16', toy6:'54' };
+      const bottomMap = { toy0:'6',  toy1:'6',  toy2:'6',  toy3:'6',  toy4:'6',  toy5:'30', toy6:'30' };
+      el.dataset.pos    = posMap[toy.id];
+      el.dataset.bottom = bottomMap[toy.id];
+      el.innerHTML = `<img src="${toy.img}" class="toy-img" alt="${toy.name}" />`;
       glassBox.insertBefore(el, glassBox.querySelector('.chute'));
     }
     el.style.left    = el.dataset.pos + '%';
-    el.style.bottom  = '8%';
+    el.style.bottom  = (el.dataset.bottom || '6') + '%';
     el.style.opacity = '1';
     el.classList.remove('grabbed');
   });
 
   slideshowOverlay.classList.remove('show');
   msgOverlay.classList.remove('show');
+  const _sv = document.getElementById('samvernOverlay'); if (_sv) _sv.classList.remove('show');
   stopAuto();
   ssIdx = 0;
   updateSlideshow();
@@ -345,44 +355,118 @@ function dropClaw() {
   dropping = true;
   setButtons(true);
 
-  const boxH = glassBox.getBoundingClientRect().height;
-  clawWire.style.height = Math.max(boxH * 0.70, 80) + 'px';
+  const boxRect = glassBox.getBoundingClientRect();
+  const boxH    = boxRect.height;
 
-  setTimeout(() => {
+  /* Heights of the claw head + grip (measured once from DOM) */
+  const clawHeadEl  = clawAssembly.querySelector('.claw-head');
+  const clawGripEl  = clawAssembly.querySelector('.claw-grip');
+  const clawHeadH   = clawHeadEl  ? clawHeadEl.getBoundingClientRect().height  : 8;
+  const clawGripH   = clawGripEl  ? clawGripEl.getBoundingClientRect().height  : 22;
+  /* Total fixed height above and below the wire */
+  const clawTipOffset = clawHeadH + clawGripH; /* px from box-top to bottom of claw grip */
+
+  /* ── Detect hit BEFORE dropping so we know target depth ── */
+  let hit     = null;
+  let stopWireH = Math.max(boxH * 0.80, 80); /* default: drop to near-bottom */
+
+  for (const toy of remaining) {
+    const el = document.getElementById(toy.id);
+    if (!el) continue;
+    if (Math.abs(clawX - parseFloat(el.dataset.pos)) < 11) {
+      hit = toy;
+      /* We want the claw grip bottom to reach the toy's top edge.
+         toy top from box-top = boxH - (bottom% * boxH) - toyHeight        */
+      const toyBottomPct = parseFloat(el.dataset.bottom || '6') / 100;
+      const toyH         = el.getBoundingClientRect().height || 50;
+      const toyTopFromBoxTop = boxH - toyBottomPct * boxH - toyH;
+      /* wire length = distance from box top to toy top, minus fixed claw parts above wire */
+      stopWireH = Math.max(toyTopFromBoxTop - clawHeadH, 20);
+      break;
+    }
+  }
+
+  /* ── Phase 1: animate wire dropping ── */
+  const DROP_SPEED    = 2.5;   /* px per frame going down  */
+  const RETRACT_SPEED = 3.8;   /* px per frame going up    */
+  let   wireH = 40;
+
+  function animateDrop() {
+    wireH = Math.min(wireH + DROP_SPEED, stopWireH);
+    clawWire.style.height = wireH + 'px';
+    if (wireH < stopWireH) {
+      requestAnimationFrame(animateDrop);
+    } else {
+      onReachedToy();
+    }
+  }
+
+  function onReachedToy() {
+    /* Close the claws */
     armLeft.className  = 'claw-arm closed-left';
     armRight.className = 'claw-arm closed-right';
 
-    let hit = null;
-    for (const toy of remaining) {
-      const el = document.getElementById(toy.id);
-      if (!el) continue;
-      if (Math.abs(clawX - parseFloat(el.dataset.pos)) < 11) { hit = toy; break; }
+    /* If we have a hit, snap the toy directly under the grip RIGHT NOW */
+    if (hit) {
+      const el = document.getElementById(hit.id);
+      if (el) {
+        el.classList.add('grabbed');
+        el.style.transition = 'none'; /* disable CSS transition — JS owns position */
+        /* Position toy so its top is flush with the claw grip bottom.
+           claw grip bottom from box top = clawHeadH + wireH + clawGripH
+           toy bottom from box bottom    = boxH - (gripBottom + toyH)          */
+        const toyH      = el.getBoundingClientRect().height || 50;
+        const gripBottomFromBoxTop = clawHeadH + wireH + clawGripH;
+        const toyBottomPx = boxH - gripBottomFromBoxTop - toyH;
+        el.style.bottom = Math.max(toyBottomPx, 0) + 'px';
+        el.style.left   = clawX + '%';
+      }
     }
 
-    setTimeout(() => {
-      clawWire.style.height = '40px';
+    /* Short pause so player sees the grab, then retract */
+    setTimeout(animateRetract, 280);
+  }
 
-      if (hit) {
-        const el = document.getElementById(hit.id);
-        el.classList.add('grabbed');
-        el.style.bottom = '85%';
+  function animateRetract() {
+    wireH = Math.max(wireH - RETRACT_SPEED, 40);
+    clawWire.style.height = wireH + 'px';
+
+    /* Keep toy glued to claw grip bottom every frame */
+    if (hit) {
+      const el = document.getElementById(hit.id);
+      if (el) {
+        const toyH = el.getBoundingClientRect().height || 50;
+        const gripBottomFromBoxTop = clawHeadH + wireH + clawGripH;
+        const toyBottomPx = boxH - gripBottomFromBoxTop - toyH;
+        el.style.bottom = Math.max(toyBottomPx, 0) + 'px';
         el.style.left   = clawX + '%';
-
-        setTimeout(() => {
-          el.style.opacity = '0';
-          setTimeout(() => el.remove(), 400);
-          remaining = remaining.filter(t => t.id !== hit.id);
-          caughtCount++;
-          scoreBadge.textContent = `Gifts caught: ${caughtCount} / 5 🎁`;
-          burst(80);
-          showPrize(hit);
-        }, 600);
-
-      } else {
-        finishDrop();
       }
-    }, 500);
-  }, 650);
+    }
+
+    if (wireH > 40) {
+      requestAnimationFrame(animateRetract);
+    } else {
+      onRetracted();
+    }
+  }
+
+  function onRetracted() {
+    if (hit) {
+      const el = document.getElementById(hit.id);
+      if (el) {
+        el.style.opacity = '0';
+        setTimeout(() => { try { el.remove(); } catch(_){} }, 350);
+      }
+      pendingHit = hit;
+      burst(80);
+      showPrize(hit);
+    } else {
+      finishDrop();
+    }
+  }
+
+  /* Kick off the drop */
+  requestAnimationFrame(animateDrop);
 }
 
 function finishDrop() {
@@ -395,13 +479,13 @@ function finishDrop() {
   } else {
     btnDrop.textContent  = '🎉 All Done!';
     btnDrop.disabled     = true;
-    setTimeout(showSlideshow, 700);
+    setTimeout(showSamvern, 700);
   }
 }
 
 function showPrize(toy) {
   /* pop-name uses inner span so gradient isn't clipped */
-  document.getElementById('popEmoji').textContent = toy.emoji;
+  document.getElementById('popEmoji').innerHTML = `<img src="${toy.img}" class="pop-toy-img" alt="${toy.name}" />`;
   document.getElementById('popName').innerHTML    = `<span class="pop-name-inner">${toy.name}</span>`;
   document.getElementById('popText').textContent  = toy.message;
   msgOverlay.classList.add('show');
@@ -415,9 +499,61 @@ function showSlideshow() {
   startAuto();
 }
 
+/* ── SAMVERN HIDDEN MESSAGE ── */
+const SAMVERN_MSG =
+  "Hi mommy, daddy didn't forget me! 🕊️\n\n" +
+  "I've always been there in every single moment and talk between you and dad.\n\n" +
+  "Enjoy your birthday, mom!\n" +
+  "I'm always watching over you with love. 🤍";
+
+const samvernOverlay = document.getElementById('samvernOverlay');
+const svMessageEl    = document.getElementById('svMessage');
+const svBtn          = document.getElementById('svBtn');
+
+function showSamvern() {
+  samvernOverlay.classList.add('show');
+  svMessageEl.textContent = '';
+  svMessageEl.classList.add('typing');
+  svBtn.classList.remove('visible');
+  const lines = SAMVERN_MSG.split('\n');
+  setTimeout(() => {
+    let li = 0, ci = 0;
+    function typeNext() {
+      if (li >= lines.length) {
+        svMessageEl.classList.remove('typing');
+        setTimeout(() => svBtn.classList.add('visible'), 600);
+        return;
+      }
+      if (ci < lines[li].length) {
+        svMessageEl.appendChild(document.createTextNode(lines[li][ci++]));
+        setTimeout(typeNext, 38);
+      } else {
+        svMessageEl.appendChild(document.createElement('br'));
+        li++; ci = 0;
+        setTimeout(typeNext, lines[li - 1] === '' ? 200 : 38);
+      }
+    }
+    typeNext();
+  }, 900);
+}
+
+function closeSamvern() {
+  samvernOverlay.classList.remove('show');
+  setTimeout(showSlideshow, 650);
+}
+svBtn.addEventListener('click', () => closeSamvern());
+svBtn.addEventListener('touchstart', e => { e.preventDefault(); closeSamvern(); }, { passive: false });
+
+
 /* ── Close popup ── */
 function closePop() {
   msgOverlay.classList.remove('show');
+  if (pendingHit) {
+    remaining  = remaining.filter(t => t.id !== pendingHit.id);
+    caughtCount++;
+    scoreBadge.textContent = `Gifts caught: ${caughtCount} / 7 🎁`;
+    pendingHit = null;
+  }
   finishDrop();
 }
 

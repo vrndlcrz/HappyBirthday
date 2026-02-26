@@ -554,7 +554,7 @@ kbd {
 .claw-wire {
   width: 3px;
   background: linear-gradient(180deg, #f9a8d4, #c4b5fd);
-  transition: height 0.5s ease;
+  /* height driven by JS rAF */
 }
 
 .claw-grip {
@@ -584,6 +584,15 @@ kbd {
   border-radius: 0 0 6px 6px;
 }
 
+.toy-img {
+  width: clamp(40px, 10vw, 60px);
+  height: clamp(40px, 10vw, 60px);
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
 .toy {
   position: absolute;
   font-size: var(--toy);
@@ -605,7 +614,7 @@ kbd {
 
 .toy.grabbed {
   animation: none !important;
-  transition: all 0.5s ease;
+  transition: opacity 0.35s ease; /* only fade-out at the end */
 }
 
 .chute {
@@ -729,9 +738,18 @@ kbd {
 }
 
 .pop-emoji {
-  font-size: clamp(2.8rem, 11vw, 4.5rem);
   display: block;
   margin-bottom: 10px;
+  animation: popBounce 0.6s ease infinite alternate;
+}
+
+.pop-toy-img {
+  width: clamp(90px, 28vw, 140px);
+  height: clamp(90px, 28vw, 140px);
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 8px 18px rgba(236, 72, 153, 0.30));
   animation: popBounce 0.6s ease infinite alternate;
 }
 
@@ -995,3 +1013,181 @@ kbd {
 
 .btn-replay:hover  { transform: translateY(-2px); }
 .btn-replay:active { transform: translateY(2px); box-shadow: 0 1px 0 #9333ea; }
+/* ═══════════════════════════════════════
+   SAMVERN OVERLAY — hidden by default
+═══════════════════════════════════════ */
+.samvern-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: radial-gradient(ellipse at 50% 40%, #1e0b35 0%, #0a0414 55%, #000 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.samvern-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* star field */
+.samvern-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at  8% 12%, rgba(255,255,255,0.85) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 20% 70%, rgba(255,255,255,0.50) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 35% 30%, rgba(255,255,255,0.60) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 50%  8%, rgba(255,255,255,0.90) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 65% 55%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 78% 20%, rgba(255,255,255,0.70) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 88% 80%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 92% 40%, rgba(255,255,255,0.65) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 15% 90%, rgba(255,255,255,0.50) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 55% 82%, rgba(255,255,255,0.35) 0%, transparent 100%);
+  animation: svStarPulse 5s ease-in-out infinite alternate;
+}
+@keyframes svStarPulse {
+  from { opacity: 0.4; }
+  to   { opacity: 1.0; }
+}
+
+/* ── popup card ── */
+.samvern-popup {
+  position: relative;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  /* Wide enough so sentences don't break mid-word */
+  width: min(520px, 92vw);
+  padding: 36px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  box-shadow: 0 0 80px rgba(167, 139, 250, 0.14), inset 0 1px 0 rgba(255,255,255,0.10);
+  transform: translateY(28px) scale(0.94);
+  transition: transform 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+  max-height: 94vh;
+  overflow-y: auto;
+}
+.samvern-overlay.show .samvern-popup {
+  transform: translateY(0) scale(1);
+}
+
+/* ── doves ── */
+.samvern-doves {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.sv-dove {
+  font-size: 1.5rem;
+  display: inline-block;
+  animation: svDoveFly 3s ease-in-out infinite;
+}
+.sv-dove1 { animation-delay: 0s;   animation-duration: 3.2s; }
+.sv-dove2 { animation-delay: 0.5s; animation-duration: 2.8s; }
+.sv-dove3 { animation-delay: 1.0s; animation-duration: 3.5s; }
+@keyframes svDoveFly {
+  0%,100% { transform: translateY(0)    rotate(-4deg); }
+  50%      { transform: translateY(-7px) rotate(4deg);  }
+}
+
+/* ── labels ── */
+.sv-from {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(196, 181, 253, 0.62);
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.sv-name {
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  text-shadow: 0 0 24px rgba(196,181,253,0.6), 0 0 50px rgba(196,181,253,0.25);
+}
+.sv-divider {
+  width: 72px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+  margin-bottom: 18px;
+}
+
+/* ── image — bigger, centered, glowing ── */
+.sv-toy-img {
+  width: clamp(100px, 22vw, 140px);
+  height: clamp(100px, 22vw, 140px);
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 20px;
+  filter: drop-shadow(0 0 18px rgba(167,139,250,0.55)) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+  animation: svDoveFly 4s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+/* ── message — left-aligned text, no awkward centering ── */
+.sv-message {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(0.95rem, 2.4vw, 1.08rem);
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 2;
+  font-weight: 600;
+  /* text-align left so lines flow naturally without orphan words */
+  text-align: left;
+  width: 100%;
+  margin-bottom: 26px;
+  min-height: 4em;
+}
+.sv-message.typing::after {
+  content: '|';
+  animation: svBlink 0.65s step-end infinite;
+  color: rgba(167, 139, 250, 0.9);
+  margin-left: 1px;
+}
+@keyframes svBlink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ── button — hidden until typing finishes ── */
+.sv-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.86);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.96rem;
+  padding: 11px 34px;
+  cursor: pointer;
+  touch-action: manipulation;
+  pointer-events: all;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease, background 0.2s ease;
+}
+.sv-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sv-btn:hover  { background: rgba(255,255,255,0.09); box-shadow: 0 0 18px rgba(167,139,250,0.28); }
+.sv-btn:active { transform: scale(0.97); }
+
+/* ── slideshow: freeze inactive slide animations ── */
+.ss-slide:not(.active) * { animation-play-state: paused !important; }
+.ss-slide.active         * { animation-play-state: running; }
