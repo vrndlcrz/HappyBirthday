@@ -1014,180 +1014,48 @@ kbd {
 .btn-replay:hover  { transform: translateY(-2px); }
 .btn-replay:active { transform: translateY(2px); box-shadow: 0 1px 0 #9333ea; }
 /* ═══════════════════════════════════════
-   SAMVERN OVERLAY — hidden by default
+   SHARED DARK OVERLAY — Samvern + Letter
 ═══════════════════════════════════════ */
-.samvern-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1200;
-  background: radial-gradient(ellipse at 50% 40%, #1e0b35 0%, #0a0414 55%, #000 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.7s ease;
-}
-.samvern-overlay.show {
-  opacity: 1;
-  pointer-events: all;
-}
+.samvern-overlay,.letter-overlay{position:fixed;inset:0;z-index:1200;background:radial-gradient(ellipse at 50% 35%,#1a0530 0%,#08020f 55%,#000 100%);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.7s ease;overflow-y:auto;}
+.samvern-overlay.show,.letter-overlay.show{opacity:1;pointer-events:all;}
 
-/* star field */
-.samvern-overlay::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(1.5px 1.5px at  8% 12%, rgba(255,255,255,0.85) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 20% 70%, rgba(255,255,255,0.50) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 35% 30%, rgba(255,255,255,0.60) 0%, transparent 100%),
-    radial-gradient(2px   2px   at 50%  8%, rgba(255,255,255,0.90) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 65% 55%, rgba(255,255,255,0.45) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 78% 20%, rgba(255,255,255,0.70) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 88% 80%, rgba(255,255,255,0.40) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 92% 40%, rgba(255,255,255,0.65) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 15% 90%, rgba(255,255,255,0.50) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 55% 82%, rgba(255,255,255,0.35) 0%, transparent 100%);
-  animation: svStarPulse 5s ease-in-out infinite alternate;
-}
-@keyframes svStarPulse {
-  from { opacity: 0.4; }
-  to   { opacity: 1.0; }
-}
+.samvern-overlay::before,.letter-overlay::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.5px 1.5px at 6% 10%,rgba(255,255,255,.90) 0%,transparent 100%),radial-gradient(1px 1px at 18% 68%,rgba(255,255,255,.55) 0%,transparent 100%),radial-gradient(1px 1px at 32% 28%,rgba(255,255,255,.65) 0%,transparent 100%),radial-gradient(2px 2px at 50% 6%,rgba(255,255,255,.95) 0%,transparent 100%),radial-gradient(1px 1px at 66% 52%,rgba(255,255,255,.50) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 79% 18%,rgba(255,255,255,.75) 0%,transparent 100%),radial-gradient(1px 1px at 88% 78%,rgba(255,255,255,.45) 0%,transparent 100%),radial-gradient(1px 1px at 14% 88%,rgba(255,255,255,.55) 0%,transparent 100%),radial-gradient(1px 1px at 54% 84%,rgba(255,255,255,.40) 0%,transparent 100%);animation:svStarPulse 5s ease-in-out infinite alternate;}
+@keyframes svStarPulse{from{opacity:.35}to{opacity:1}}
 
-/* ── popup card ── */
-.samvern-popup {
-  position: relative;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 28px;
-  /* Wide enough so sentences don't break mid-word */
-  width: min(520px, 92vw);
-  padding: 36px 40px 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  box-shadow: 0 0 80px rgba(167, 139, 250, 0.14), inset 0 1px 0 rgba(255,255,255,0.10);
-  transform: translateY(28px) scale(0.94);
-  transition: transform 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
-  max-height: 94vh;
-  overflow-y: auto;
-}
-.samvern-overlay.show .samvern-popup {
-  transform: translateY(0) scale(1);
-}
+.samvern-popup,.letter-popup{position:relative;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);border-radius:26px;width:min(500px,94vw);padding:clamp(20px,4vw,36px) clamp(20px,5vw,40px);display:flex;flex-direction:column;align-items:center;box-shadow:0 0 70px rgba(236,72,153,.12),0 0 120px rgba(139,92,246,.10),inset 0 1px 0 rgba(255,255,255,.10);transform:translateY(24px) scale(0.94);transition:transform 0.8s cubic-bezier(0.34,1.4,0.64,1);max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.samvern-overlay.show .samvern-popup,.letter-overlay.show .letter-popup{transform:translateY(0) scale(1);}
+.letter-popup{width:min(540px,96vw);}
 
-/* ── doves ── */
-.samvern-doves {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.sv-dove {
-  font-size: 1.5rem;
-  display: inline-block;
-  animation: svDoveFly 3s ease-in-out infinite;
-}
-.sv-dove1 { animation-delay: 0s;   animation-duration: 3.2s; }
-.sv-dove2 { animation-delay: 0.5s; animation-duration: 2.8s; }
-.sv-dove3 { animation-delay: 1.0s; animation-duration: 3.5s; }
-@keyframes svDoveFly {
-  0%,100% { transform: translateY(0)    rotate(-4deg); }
-  50%      { transform: translateY(-7px) rotate(4deg);  }
-}
+.sv-top-deco{display:flex;justify-content:center;gap:14px;margin-bottom:10px;}
+.sv-spark{display:inline-block;font-size:clamp(1.1rem,3.5vw,1.5rem);animation:svSparkFloat 2.8s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(249,168,212,.7));}
+.sv-spark1{animation-delay:0s;animation-duration:2.6s}
+.sv-spark2{animation-delay:.5s;animation-duration:3.0s}
+.sv-spark3{animation-delay:1s;animation-duration:2.8s}
+@keyframes svSparkFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.15)}}
 
-/* ── labels ── */
-.sv-from {
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.72rem;
-  color: rgba(196, 181, 253, 0.62);
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.sv-name {
-  font-family: 'Pacifico', cursive;
-  font-size: clamp(1.8rem, 5vw, 2.4rem);
-  color: #fff;
-  line-height: 1.15;
-  margin-bottom: 12px;
-  text-shadow: 0 0 24px rgba(196,181,253,0.6), 0 0 50px rgba(196,181,253,0.25);
-}
-.sv-divider {
-  width: 72px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
-  margin-bottom: 18px;
-}
+.sv-from{font-family:'Nunito',sans-serif;font-size:.7rem;color:rgba(249,168,212,.65);font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
+.sv-name{font-family:'Pacifico',cursive;font-size:clamp(1.6rem,5vw,2.4rem);color:#fff;line-height:1.15;margin-bottom:12px;text-shadow:0 0 20px rgba(236,72,153,.65),0 0 50px rgba(139,92,246,.35),0 0 90px rgba(236,72,153,.20);}
+.letter-title{font-size:clamp(1.2rem,4vw,1.8rem)!important;margin-bottom:14px!important;}
+.sv-divider{width:68px;height:1px;background:linear-gradient(90deg,transparent,rgba(249,168,212,.5),transparent);margin-bottom:16px;}
+.sv-toy-img{width:clamp(90px,20vw,130px);height:clamp(90px,20vw,130px);object-fit:contain;display:block;margin:0 auto 18px;filter:drop-shadow(0 0 14px rgba(236,72,153,.55)) drop-shadow(0 0 30px rgba(139,92,246,.35)) drop-shadow(0 6px 12px rgba(0,0,0,.5));animation:svSparkFloat 4s ease-in-out infinite;animation-delay:.4s;}
+.sv-message{font-family:'Nunito',sans-serif;font-size:clamp(.9rem,2.5vw,1.06rem);color:rgba(255,255,255,.88);line-height:1.95;font-weight:600;text-align:left;width:100%;margin-bottom:22px;min-height:3em;}
+.sv-message.typing::after{content:'|';animation:svBlink .65s step-end infinite;color:rgba(249,168,212,.9);margin-left:1px;}
+@keyframes svBlink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ── image — bigger, centered, glowing ── */
-.sv-toy-img {
-  width: clamp(100px, 22vw, 140px);
-  height: clamp(100px, 22vw, 140px);
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 20px;
-  filter: drop-shadow(0 0 18px rgba(167,139,250,0.55)) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
-  animation: svDoveFly 4s ease-in-out infinite;
-  animation-delay: 0.3s;
-}
+.letter-body{width:100%;max-height:clamp(200px,42vh,380px);overflow-y:auto;margin-bottom:20px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;}
+.letter-body::-webkit-scrollbar{width:4px}
+.letter-body::-webkit-scrollbar-track{background:transparent}
+.letter-body::-webkit-scrollbar-thumb{background:rgba(236,72,153,.3);border-radius:10px}
+.letter-para{font-family:'Nunito',sans-serif;font-size:clamp(.9rem,2.4vw,1.04rem);color:rgba(255,255,255,.86);line-height:1.9;font-weight:600;margin-bottom:clamp(12px,2.5vw,18px);text-align:left;min-height:1.2em;}
+.letter-para:last-child{margin-bottom:0}
 
-/* ── message — left-aligned text, no awkward centering ── */
-.sv-message {
-  font-family: 'Nunito', sans-serif;
-  font-size: clamp(0.95rem, 2.4vw, 1.08rem);
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 2;
-  font-weight: 600;
-  /* text-align left so lines flow naturally without orphan words */
-  text-align: left;
-  width: 100%;
-  margin-bottom: 26px;
-  min-height: 4em;
-}
-.sv-message.typing::after {
-  content: '|';
-  animation: svBlink 0.65s step-end infinite;
-  color: rgba(167, 139, 250, 0.9);
-  margin-left: 1px;
-}
-@keyframes svBlink {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0; }
-}
+.sv-btn{background:transparent;border:1.5px solid rgba(249,168,212,.4);border-radius:50px;color:rgba(255,255,255,.88);font-family:'Nunito',sans-serif;font-weight:800;font-size:clamp(.82rem,2.5vw,.96rem);padding:11px 32px;cursor:pointer;touch-action:manipulation;pointer-events:all;position:relative;z-index:10;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease,background .2s,box-shadow .2s;white-space:nowrap;}
+.sv-btn.visible{opacity:1;transform:translateY(0);}
+.sv-btn:disabled{opacity:0!important;pointer-events:none!important;cursor:default;}
+.sv-btn:not(:disabled):hover{background:rgba(236,72,153,.12);box-shadow:0 0 20px rgba(236,72,153,.3),0 0 40px rgba(139,92,246,.15);}
+.sv-btn:not(:disabled):active{transform:scale(.97);}
+.letter-replay-btn{margin-top:4px;}
 
-/* ── button — hidden until typing finishes ── */
-.sv-btn {
-  background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.28);
-  border-radius: 50px;
-  color: rgba(255, 255, 255, 0.86);
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  font-size: 0.96rem;
-  padding: 11px 34px;
-  cursor: pointer;
-  touch-action: manipulation;
-  pointer-events: all;
-  position: relative;
-  z-index: 10;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease, background 0.2s ease;
-}
-.sv-btn.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.sv-btn:hover  { background: rgba(255,255,255,0.09); box-shadow: 0 0 18px rgba(167,139,250,0.28); }
-.sv-btn:active { transform: scale(0.97); }
-
-/* ── slideshow: freeze inactive slide animations ── */
-.ss-slide:not(.active) * { animation-play-state: paused !important; }
-.ss-slide.active         * { animation-play-state: running; }
+/* Short screen fix */
+@media(max-height:600px){.machine{transform:scale(.82);transform-origin:top center;margin-top:-20px}.game-title,.score-badge,.controls-hint{margin-bottom:2px}}
+@media(max-height:480px){.machine{transform:scale(.70);transform-origin:top center;margin-top:-32px}}

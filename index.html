@@ -132,47 +132,41 @@
     </div>
   </div>
 
-  <!-- SAMVERN HIDDEN MESSAGE (invisible until .show added by JS) -->
+  <!-- SAMVERN SECRET MESSAGE -->
   <div class="samvern-overlay" id="samvernOverlay">
     <div class="samvern-popup">
-      <div class="samvern-doves">
-        <span class="sv-dove sv-dove1">🕊️</span>
-        <span class="sv-dove sv-dove2">🕊️</span>
-        <span class="sv-dove sv-dove3">🕊️</span>
+      <div class="sv-top-deco">
+        <span class="sv-spark sv-spark1">🌟</span>
+        <span class="sv-spark sv-spark2">✨</span>
+        <span class="sv-spark sv-spark3">🌟</span>
       </div>
       <p class="sv-from">a hidden gift from...</p>
       <h2 class="sv-name">Samvern 🤍</h2>
       <div class="sv-divider"></div>
       <img src="samvern.png" class="sv-toy-img" alt="Samvern" />
       <p class="sv-message" id="svMessage"></p>
-      <button class="sv-btn" id="svBtn">With love, always 🤍</button>
+      <button class="sv-btn" id="svBtn">Read Daddy's Letter 💌</button>
     </div>
   </div>
 
-    <!-- ═══════════════════════════
-       SLIDESHOW FINAL SCREEN
-  ═══════════════════════════ -->
-  <div class="slideshow-overlay" id="slideshowOverlay">
-
-    <p class="ss-title">🎊 All Gifts Collected! 🎊</p>
-    <p class="ss-subtitle">
-      You collected every single gift — just like you've collected so many beautiful moments!
-      Here's a little slideshow, just for you 💖
-    </p>
-
-    <div class="ss-frame" id="ssFrame"></div>
-
-    <div class="ss-dots" id="ssDots"></div>
-
-    <div class="ss-nav">
-      <button class="ss-arrow" id="ssPrev">‹</button>
-      <span class="ss-counter" id="ssCounter">1 / 6</span>
-      <button class="ss-arrow" id="ssNext">›</button>
+  <!-- DADDY'S LETTER -->
+  <div class="letter-overlay" id="letterOverlay">
+    <div class="letter-popup">
+      <div class="sv-top-deco">
+        <span class="sv-spark sv-spark1">⭐</span>
+        <span class="sv-spark sv-spark2">🌟</span>
+        <span class="sv-spark sv-spark3">⭐</span>
+      </div>
+      <p class="sv-from">a letter from Daddy</p>
+      <h2 class="sv-name letter-title">Happy Birthday, Samsam 🎂</h2>
+      <div class="sv-divider"></div>
+      <div class="letter-body" id="letterBody"></div>
+      <button class="sv-btn letter-replay-btn" id="btnReplay">I love you too, lablab! 🥰</button>
     </div>
-
-    <button class="btn-replay" id="btnReplay">🎁 Play Again!</button>
-
   </div>
+
+  <!-- FLOATING HEARTS CANVAS (lablab button effect) -->
+  <canvas id="heartsCanvas" style="position:fixed;inset:0;z-index:1300;pointer-events:none;"></canvas>
 
   <script src="script.js"></script>
 
